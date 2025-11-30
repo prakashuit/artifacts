@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<mxfile host="app.diagrams.net" modified="2024-01-01T00:00:00.000Z" agent="Mozilla/5.0" version="22.1.0" type="device">
+  <diagram id="option-b-sequence" name="Option B - Sequence">
+    <mxGraphModel dx="1434" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="Option B: Authentication Flow Sequence" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="570" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="User Browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="80" width="100" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="3_lifeline" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="3">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="150" y="1350" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="4" value="ALB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="100" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="4_lifeline" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="4">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="1350" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="5" value="Entra ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="500" y="80" width="100" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="5_lifeline" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="5">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="550" y="1350" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="6" value="React SPA
+(ECS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="700" y="80" width="100" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="6_lifeline" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="6">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="750" y="1350" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="7" value="FastAPI
+(ECS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="900" y="80" width="100" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="7_lifeline" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1" source="7">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="950" y="1350" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="100" value="1. GET https://app.example.com" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="150" y="200" as="sourcePoint"/>
+          <mxPoint x="350" y="200" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="101" value="2. Check session cookie
+(not found)" style="endArrow=classic;html=1;rounded=0;dashed=1;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="250" as="sourcePoint"/>
+          <mxPoint x="450" y="250" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="102" value="3. Redirect to Entra ID
+authorize endpoint" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="300" as="sourcePoint"/>
+          <mxPoint x="550" y="300" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="103" value="4. User authenticates
+(login page)" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="150" y="350" as="sourcePoint"/>
+          <mxPoint x="550" y="350" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="104" value="5. Redirect with
+authorization code" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="550" y="400" as="sourcePoint"/>
+          <mxPoint x="150" y="400" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="105" value="6. Callback with auth code" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="150" y="450" as="sourcePoint"/>
+          <mxPoint x="350" y="450" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="106" value="7. Exchange code for tokens
+(token endpoint)" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="500" as="sourcePoint"/>
+          <mxPoint x="550" y="500" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="107" value="8. Return ID token,
+access token, refresh token" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="550" y="550" as="sourcePoint"/>
+          <mxPoint x="350" y="550" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="108" value="9. Create session,
+set cookie" style="endArrow=classic;html=1;rounded=0;dashed=1;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="600" as="sourcePoint"/>
+          <mxPoint x="450" y="600" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="109" value="10. Forward request with:
+- Session cookie
+- x-amzn-oidc-data header
+- x-amzn-oidc-identity" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="650" as="sourcePoint"/>
+          <mxPoint x="750" y="650" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="110" value="11. Return React SPA" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="750" y="700" as="sourcePoint"/>
+          <mxPoint x="350" y="700" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="111" value="12. Serve SPA with
+session cookie" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="750" as="sourcePoint"/>
+          <mxPoint x="150" y="750" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="112" value="13. SPA loads in browser" style="endArrow=classic;html=1;rounded=0;dashed=1;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="150" y="850" as="sourcePoint"/>
+          <mxPoint x="250" y="850" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="113" value="14. API call with session cookie
+GET https://api.example.com/users" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="150" y="900" as="sourcePoint"/>
+          <mxPoint x="350" y="900" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="114" value="15. Validate session cookie" style="endArrow=classic;html=1;rounded=0;dashed=1;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="950" as="sourcePoint"/>
+          <mxPoint x="450" y="950" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="115" value="16. Forward with:
+- x-amzn-oidc-data
+- x-amzn-oidc-identity" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="1000" as="sourcePoint"/>
+          <mxPoint x="950" y="1000" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="116" value="17. Validate ALB headers,
+extract user claims" style="endArrow=classic;html=1;rounded=0;dashed=1;curved=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="950" y="1050" as="sourcePoint"/>
+          <mxPoint x="1050" y="1050" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="117" value="18. Return user data" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="950" y="1100" as="sourcePoint"/>
+          <mxPoint x="350" y="1100" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="118" value="19. Return API response" style="endArrow=classic;html=1;rounded=0;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="350" y="1150" as="sourcePoint"/>
+          <mxPoint x="150" y="1150" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="200" value="Note: ALB manages all OIDC flows.
+Applications receive pre-authenticated requests." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1200" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="201" value="Challenge: Postman cannot easily obtain
+ALB session cookies. Direct Bearer token
+validation not supported by default." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1200" width="300" height="80" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
