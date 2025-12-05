@@ -1,0 +1,16 @@
+I have a very vague thoughts on building some agents and tools for the agent. I would you to provide me some writeup in details adding more colours to it. Do not worry about the implementation but just the thought and need an detailed memo styled write-ups.
+
+I would start with building an foundational agents that would help get help from tools that are majorily categorized into 4 category 
+Tool1 : API Tool - Which have the list of API registered with the details about every API and the input and output details and any details that are reuired to invoke. 
+Tool2 : Browser Tool - This is kind of an browser-use that will open the browser load the website and perform the actions as mentioend on the prompt text given for this tool.
+Tool3 : Non-Browser Tool - There are still tools in the company that are not browser compatoble but an console based or native apps too, this would work similiar to the browser tool 
+Tool4 : SQL tool - This is the tool that can convert the english language to the SQL query based on the datasource configured and list of objected setup on this tool.
+Tool5 : Middleware Tool - This tool is to connect to various middleware like SFTP, MFX, MQ, Kafka to post the message/file and also receive the message/file. 
+
+Now this all would constitute as an Foundation Agent, but when an specific case is defined then we build an materilized agent out of the foundational agent that will define type of tools and specifc tools like if API provide the specif set of API, if Browser tool with the set of instructions in english the perform, If middleware tool specific Queue config or Topic config to either read or write with the details on the tools config. 
+
+Given this context I want you to provide me a detailed write-ups on this thought in a way tat can be easily understood and also add your colors to it but make sure it can be implemented. 
+
+Also add a section on the high level design and to some extent how this can be implemented. 
+
+Can you please generate an prompt for the above ?
