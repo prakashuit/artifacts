@@ -1,0 +1,24 @@
+You are playing an role of an solution architect and security consultant. I'm defining my use-case and scenarios to cover and proposed solutions and I want you to give a very detailed technical documentation defining the use-case, scenarios and for each option provide very detailed insights how the implementtion would be pros. cons, etc., 
+
+Use-Case : I'm developing an application in AWS cloud with UI as react and the back-end as Python Fast API deployed to ECS there are few lambdas as well and all these are fronted by ALB, except Lamnda. Backend service need to validate every calls it receive. Now my requirement is to implement the Authentication and Authorization. We will be using Microsoft Entra as IDP using OIDC. I would at high level divide this an two types,  User Interactive flow and Non-user interative flow. User Interactive means user invoking from browser will be given option to login and MFA, whereas the non-user interatice is mere an serrice to service calls no user interventions, need to achive this two flows. 
+On the authorization Roles the UI have couple of Role and the FASTAPI Service might have one role, need to solution how this service role will be assumed by these 2 flows. 
+
+Scenarios : 
+1. User login to UI using ALB (Interactive flow)
+2. User performs some actions in UI, inernally UI calls the back end service (Interactive flow - already authenticated user)
+3. User uses browser or postman to invoke the back end service directly may be an ALB
+4. Lambda or any other service within the VPC calls the back-end service
+
+Tools : UI on React, backend FastAPI on Python, Microsoft ENTRA as IDP for both Authentication and Authorization. For Authorization it will be deined as groups. Lambda is on Python. We have the ALB path based routing root(/) to UI and /svc to service
+
+Options :
+1. ALB-OIDC Pattern: Have the ALB-OIDC configured with ENTRA config (client crentials flow), need more details on how to handle the Scenario 2 defined above. Both UI and Services are fronted by Entra for interactive flow and for Lambda to service using the cloud map service discovery, should it require the security for inter-VPC calls?
+2. BFF Pattern: UI fronted by ALB-OIDC and any service calls from UI will be using the internal backend and then redirects to the actual service
+3. MSAL-react or auth code PKCI flow : ALB will not have the OIDC config, UI will have msal-react integration with auth code PKCI flow, UI to bac-end service call will be as usual but with obvisous auth token validiton, etc., 
+
+If you have additional option do include them and for each of the options I need an detailed implementation details and also talking about how does it cover the use-case, scenario mentioned above. 
+At the end provide me with the table my options and your option like matrix on scenarios, use-cases, differnt parameter of security, latency, etc., and also the recommended approach.  
+
+I want you to provide me a very detailed technical documentation in a word document.
+
+System Prompt : I need you to learn all of the above very tiny details without missing anything and provide me a very good prompt that any model can generate a good technical documentation in a word document as described above. do you understand ?
