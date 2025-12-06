@@ -1,0 +1,217 @@
+You are an expert Python engineer and AI agentic systems architect. You will design and implement a complete, production-style prototype of an “API Selector” application.
+
+Your task: generate the full, runnable code (in a single Python file unless otherwise needed) for a Streamlit app that uses LangGraph (with a ReAct-style / planning-and-execution approach) plus my company LLM SDK to:
+
+Accept a natural-language query from a user.
+Plan which internal APIs (from an API registry) to call, in what order, with what inputs and expected outputs.
+Show the user the planned sequence of API calls (including names, inputs, outputs, and reasoning/execution plan), with a toggle to hide/show reasoning details.
+On user confirmation (via an “Execute” button), execute that planned sequence of REST API calls.
+Display both:
+Raw API responses (e.g., JSON).
+A human-friendly, AI-generated summary/answer.
+You must return only the complete code, no explanations, no comments outside the code. All explanations, if any, must be inside comments in the code itself.
+
+Tech stack and key constraints
+UI framework
+Use Streamlit for the UI.
+Agentic framework
+Use LangGraph (not plain LangChain) to implement the agent-style orchestration.
+Use a ReAct-style or “plan and then execute” pattern tailored to this use case:
+First, interpret the user query and create an explicit multi-step plan of API calls.
+Then, after user confirmation, execute the plan and aggregate results.
+Use my company LLM via SDK for all reasoning (planning, tool selection, summarization, formatting).
+Company LLM SDK integration (critical)
+Assume there is a global client object from my SDK that has the following methods (already initialized elsewhere; you just use it):
+client.completion.create(model: str, prompt: str, stream: bool, temperature: float, n: int)
+Synchronous.
+Returns a JSON response object. You must parse out the text completion.
+client.chat.create(model: str, messages: list, stream: bool = False, temperature: float = 1.0, n: int = 1, **kwargs)
+messages follow the common structure: each message is a dict like {"role": "system" | "user" | "assistant" | "tool", "content": "..."}.
+Synchronous.
+Returns a JSON response object; you must parse out the assistant’s text content.
+Do NOT use OpenAI, Anthropic, or any other external LLM clients. All LLM calls must go through this SDK.
+Implement small wrapper utility functions such as:
+def llm_completion(prompt: str, model: str = "default-model", temperature: float = 1.0) -> str: ...
+def llm_chat(messages: list, model: str = "default-model", temperature: float = 1.0) -> str: ...
+These wrappers should call client.completion.create or client.chat.create, parse the JSON response, and return only the final str text.
+Make it easy to change the default model name via a constant or configuration variable.
+API registry storage
+Maintain an API registry describing the internal REST APIs available to the agent.
+The registry must support:
+In-memory representation (Python data structure).
+Ability to load from and save to a local JSON file.
+Define a clear schema for each API entry, including at minimum:
+name: short identifier (string).
+description: natural-language description of what the API does (string).
+url: the HTTP endpoint (string).
+method: one of GET, POST, PUT, DELETE.
+input_schema: description of required and optional inputs; you can represent as a simple dict or JSON-schema-like structure.
+output_schema: description of expected output structure.
+type: can just be "rest" for now (but leave room to extend).
+Any other fields you find useful for planning (e.g., example_inputs, tags, domain, etc.).
+Implement an ApiRegistry abstraction with methods like:
+list_apis()
+get_api_by_name(name)
+add_api(api_definition)
+remove_api(name)
+load_from_json(path)
+save_to_json(path)
+API types & network
+All APIs are REST only:
+HTTP methods: GET, POST, PUT, DELETE.
+Implement an HTTP client layer (e.g., using requests) to actually invoke the REST APIs according to the registry definition.
+For now, do not implement authentication. Leave clear extension points in the code where auth headers, tokens, or additional configuration could be injected later.
+Implement generic helper like:
+def execute_rest_api(api_def, resolved_inputs) -> dict | Any: ...
+This should:
+Build the appropriate HTTP request based on method, url, and input parameters.
+Return parsed JSON response if possible (fallback to raw text if needed).
+Domain and sample APIs
+Pre-populate the registry with several sample APIs relevant to investment banking backoffice/middle-office context. For example (you design reasonable mock APIs):
+Trade booking status retrieval.
+Position reconciliation summary.
+Settlement status check.
+Corporate action events listing for a given instrument/date.
+Risk metrics snapshot retrieval.
+For these sample APIs:
+Use realistic-looking but non-sensitive URLs (e.g., https://mock-backoffice.internal/trades/status).
+Describe realistic input/output schemas (e.g., trade IDs, dates, instrument IDs, status enums, etc.).
+These can be mock endpoints (the code should work structurally; actual HTTP calls may be stubbed or pointed to public mock APIs if needed).
+Ensure the LLM planning logic has rich descriptions for these APIs to leverage.
+Functional requirements
+Streamlit UI layout
+The main page should include:
+A text input area (st.text_area) for the natural-language query.
+A button to “Generate Plan” (or similar).
+A section to display the planned API call sequence, including:
+API names.
+Descriptions.
+Sequence/order.
+For each step:
+Inputs it plans to use (with values or how they are derived).
+Expected outputs / what the step is meant to achieve.
+The agent’s reasoning and execution plan in natural-language form.
+A control to hide/show reasoning details:
+For example, a checkbox or an expander that controls whether the internal reasoning/execution plan is shown.
+At minimum, always show: API names, sequence, key inputs/outputs.
+Hideable portion: detailed reasoning / chain-of-thought style explanation.
+An “Execute Plan” button that:
+Executes the planned sequence of API calls using HTTP.
+Captures each step’s raw response.
+A results section that shows:
+For each step:
+API name, URL, method.
+Inputs used.
+Raw response (e.g., JSON pretty-printed).
+An AI-generated, human-friendly formatted summary/answer that synthesizes all the step results.
+Optionally, any intermediate tables/visualization (e.g., tabular summaries using st.table or st.dataframe).
+A sidebar (or secondary section) for API registry management:
+List existing registered APIs.
+Form controls to add a new API interactively via the UI.
+Optionally, a way to save the current registry to JSON and reload it.
+Add API via Streamlit UI
+Provide a form in Streamlit where the user can:
+Input:
+API name
+description
+url
+HTTP method (dropdown: GET, POST, PUT, DELETE)
+Fields for input parameters (e.g., name, type, required/optional, description) – you can design a simple UX for this; even a free-form JSON text area is acceptable as a first version.
+Fields for output schema description (again, can be JSON text).
+Optional tags or domain indicators.
+When the user submits:
+Validate basic fields.
+Add this API to the in-memory registry.
+Optionally write it out to a JSON file for persistence.
+Show a list of current APIs in a table with columns like Name, Method, URL, Description.
+Planning phase (agent behavior)
+When user enters a query and clicks “Generate Plan”:
+The system constructs a prompt for the LLM (via my SDK) that includes:
+A description of the overall task of composing API calls from the registry.
+The current API registry (names, descriptions, methods, input/output schemas).
+The user query.
+Instructions to:
+Determine which APIs are relevant.
+Decide on the sequence of calls.
+For each step, specify:
+API name.
+Rationale for choosing it.
+Inputs it will take (and where they come from: user query, previous step outputs, constants, etc.).
+Expected outputs and their role in the overall solution.
+Use LangGraph to structure this:
+A node for planning that uses LLM chat (via client.chat.create) to produce a structured plan.
+Represent the plan internally as a Python data structure (e.g., list of steps with fields: api_name, input_mapping, description, etc.).
+Parse the LLM output into this data structure reliably:
+Instruct the LLM to respond in strict JSON or another easily-parseable schema.
+Implement parsing and validation logic in code.
+Display the plan in the UI:
+Show summary (sequence of API names and short descriptions).
+Show inputs/outputs per step.
+Reasoning and plan details only visible if the user enables a “Show internal reasoning” toggle.
+Execution phase
+When user clicks “Execute Plan”:
+Use LangGraph to run through an execution graph:
+For each planned step:
+Resolve its inputs by:
+Reading from user query / user-provided fields.
+Reading from previous steps’ outputs where specified.
+Call the correct REST API via your HTTP helper.
+Store the response in a central state object accessible to later steps and to the final summarization node.
+Collect all individual step results.
+Summarization / AI output formatting
+After all steps are executed:
+Build a structured representation of the entire run:
+User query.
+Plan.
+Per-step results (raw JSON, key extracted fields).
+Call the LLM via client.chat.create to generate:
+A human-friendly explanation of what was done.
+A concise answer targeted to the user’s original question.
+Optionally, bullet-point highlights, key metrics, or tabular data.
+Display both:
+Raw data: show per-step JSON responses (pretty-printed) so the user can inspect exact outputs.
+Presentable AI format: the summarized/beautified response generated by the LLM.
+LangGraph structure
+Define a LangGraph workflow roughly like:
+Nodes:
+planning_node: uses my LLM (via SDK) + API registry to create a plan.
+execution_node: iterates through the plan, performing API calls and storing results.
+summarization_node: uses my LLM to create the final human-readable output.
+Edges:
+Start → planning_node → execution_node → summarization_node → End.
+The graph should be callable from Streamlit code in a way that:
+You pass in user query and current registry.
+You can run only the planning phase (for “Generate Plan” button) and retain that plan in the Streamlit session state.
+You can run execution + summarization phases when user clicks “Execute Plan”, using the previously stored plan.
+Reasoning visibility control
+Implement a control (flag in Streamlit, e.g., show_reasoning) that:
+When True, the UI shows:
+Detailed per-step reasoning from the planning phase.
+Any agent “thoughts” or intermediate explanations you choose to log.
+When False, the UI shows only:
+High-level plan (API names, sequence, inputs/outputs).
+Final answer.
+Ensure that internal prompts and chain-of-thought are not displayed unless this is explicitly enabled, but they are still used behind the scenes.
+Error handling
+For now keep error handling minimal and pragmatic:
+Catch network/HTTP errors and display a concise error message for the failed step.
+Continue or stop as you judge reasonable, but keep the implementation simple.
+Clearly mark where more robust error handling and retries could be added later.
+Code organization and quality
+Place all logic in a single Python file that can be run with streamlit run <filename>.py.
+Organize code into logical sections:
+Imports and configuration (including any constants for model names, JSON registry file path, etc.).
+SDK integration helpers (llm_completion, llm_chat, response parsing).
+API registry classes/functions.
+HTTP execution helpers for REST APIs.
+LangGraph graph definition (nodes, edges, state).
+Streamlit UI layer (including main() or similar).
+Use type hints where helpful.
+Add concise docstrings and inline comments explaining key design decisions (especially around planning and execution logic).
+Make sure the code is self-contained and ready to run, aside from:
+The actual SDK client initialization (client) which you should show as a clear placeholder where the user plugs in their real SDK object.
+Do not include any dummy secrets or tokens.
+Output format (very important)
+Output only code, no narrative explanation around it.
+The code must be complete and runnable (after installing required dependencies and wiring the real client object for my SDK).
+Do not wrap the code in markdown code fences; return it as plain code text.
